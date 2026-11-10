@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-10T10:31:46.287Z",
+  "timestamp": "2026-11-10T11:01:45.550Z",
   "target": "http://127.0.0.1:3001",
   "tool": "Node.js HTTP integration tests (not ZAP or Burp)",
   "checks": [
