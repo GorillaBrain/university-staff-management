@@ -95,4 +95,8 @@ Never commit `.env.local`, `.local/`, `.vercel/` or account credential files. `.
 - `prisma/`: schema, migration and seed.
 - `lab/`: separate audit build and Docker setup.
 - `security-audit/`: assessment guides, report draft and remediation mapping.
-- `tests/`, `scripts/`, `.github/workflows/`: verification and setup.
+- `tests/`, `scripts/`: verification and setup; `docs/verify-workflow.example.yml`: optional CI template.
+
+## Optional continuous integration
+
+The workflow is provided as `docs/verify-workflow.example.yml`. To enable GitHub Actions, an authorized maintainer can copy it to `.github/workflows/verify.yml` using a sign-in with workflow permission. It is a template, not an enabled or completed CI run.
