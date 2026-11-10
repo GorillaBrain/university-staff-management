@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+outputs/
+*.tsbuildinfo
+next-env.d.ts
+.local/
+.vercel/
+security-audit/evidence/*.json
+security-audit/evidence/*.html
+security-audit/evidence/*.xml
+security-audit/evidence/*.har
+!security-audit/evidence/verification.json
+.env*
+!.env.example
+
+!.env.example

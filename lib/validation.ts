@@ -1,0 +1,12 @@
+import { z } from 'zod';
+const text = (max: number) => z.string().trim().min(1).max(max);
+export const roles = ['Administrator', 'Department Head', 'Staff Member'] as const;
+export const email = z.email().max(150).transform(s => s.toLowerCase());
+export const password = z.string().min(12, 'Use at least 12 characters.').max(72, 'Use at most 72 characters.').refine(s => Buffer.byteLength(s, 'utf8') <= 72, 'Use at most 72 bytes.');
+export const staffInput = z.object({ name: text(80), email, departmentId: z.number().int().positive(), position: text(100), role: z.enum(roles), phone: z.string().trim().max(30), status: z.enum(['Active', 'Inactive']), password: password.optional() }).strict();
+export const profileInput = z.object({ name: text(80), email, phone: z.string().trim().max(30) }).strict();
+export const departmentInput = z.object({ name: text(100), code: text(10).regex(/^[A-Za-z0-9-]+$/), headId: z.number().int().positive().nullable() }).strict();
+export const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(s => !Number.isNaN(Date.parse(s)) && new Date(s).toISOString().slice(0, 10) === s, 'Invalid date.');
+export const leaveInput = z.object({ staffId: z.number().int().positive(), start: date, end: date, type: z.enum(['Annual leave', 'Medical leave', 'Emergency leave', 'Unpaid leave']), reason: text(1000) }).strict().refine(l => l.end >= l.start && (Date.parse(l.end) - Date.parse(l.start)) / 86400000 <= 365, 'Use a valid date range of at most 366 days.');
+export const reviewInput = z.object({ ids: z.array(z.number().int().positive()).min(1).max(100), status: z.enum(['Approved', 'Rejected']) }).strict();
+export const settingsInput = z.object({ institution: text(100), email, notifications: z.boolean() }).strict();

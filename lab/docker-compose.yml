@@ -1,0 +1,47 @@
+name: usms-local-audit
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: lab
+      POSTGRES_PASSWORD: lab-only-database
+      POSTGRES_DB: usms_lab
+    volumes:
+      - audit-postgres:/var/lib/postgresql/data
+      - ./init-database.sql:/docker-entrypoint-initdb.d/01-application-role.sql:ro
+    networks: [audit-only]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lab -d usms_lab"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  application:
+    build:
+      context: ..
+      dockerfile: lab/vulnerable-app/Dockerfile
+    environment:
+      AUDIT_LAB_ONLY: "1"
+      DATABASE_URL: postgresql://labapp:lab-only-app-database@database:5432/usms_lab
+      APP_ORIGIN: http://127.0.0.1:3002
+      AUTH_COOKIE_SECURE: "false"
+      SEED_PASSWORD: UniversityLab123!
+    ports:
+      - "127.0.0.1:3002:3002"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks: [audit-only]
+    security_opt: ["no-new-privileges:true"]
+  semgrep:
+    image: semgrep/semgrep:latest
+    profiles: [tools]
+    volumes:
+      - ..:/src:ro
+    working_dir: /src
+    command: ["semgrep", "scan", "--config", "security-audit/semgrep.yml", "lab/vulnerable-app/overrides", "--json"]
+    networks: [audit-only]
+networks:
+  audit-only:
+    internal: true
+volumes:
+  audit-postgres:

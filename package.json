@@ -1,0 +1,48 @@
+{
+  "name": "university-staff-management",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "node scripts/check-public-build.mjs && prisma generate && next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:deploy": "node --env-file-if-exists=.env.local node_modules/prisma/build/index.js migrate deploy",
+    "db:seed": "node --env-file-if-exists=.env.local --import tsx prisma/seed.ts",
+    "db:local": "node scripts/local-postgres.mjs",
+    "test": "node --env-file-if-exists=.env.local --import tsx --test tests/*.test.ts",
+    "test:api": "node --env-file-if-exists=.env.local --import tsx tests/api-integration.ts",
+    "audit:lab": "node scripts/compose.mjs up --build -d",
+    "audit:stop": "node scripts/compose.mjs down",
+    "audit:semgrep": "semgrep scan --config security-audit/semgrep.yml lab/vulnerable-app",
+    "audit:secure": "semgrep scan --config security-audit/semgrep.yml app lib --error",
+    "check:public": "node scripts/check-public-build.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "@tailwindcss/postcss": "^4.3.5",
+    "bcryptjs": "^3.0.3",
+    "lucide-react": "^1.71.0",
+    "next": "^16.4.6",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "embedded-postgres": "^18.6.0-beta.19",
+    "prisma": "^6.19.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.0"
+  },
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  }
+}

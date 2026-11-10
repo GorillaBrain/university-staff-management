@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  code   String  @unique
+  headId Int?    @unique
+  head   Staff?  @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull)
+  staff  Staff[] @relation("DepartmentStaff")
+}
+
+model Staff {
+  id             Int          @id @default(autoincrement())
+  name           String
+  email          String       @unique
+  passwordHash   String
+  position       String
+  role           String       @default("Staff Member")
+  phone          String       @default("")
+  status         String       @default("Active")
+  notifications  Boolean      @default(true)
+  departmentId   Int
+  department     Department   @relation("DepartmentStaff", fields: [departmentId], references: [id])
+  headedDepartment Department? @relation("DepartmentHead")
+  sessions       Session[]
+  attendance     Attendance[]
+  leaves         Leave[]      @relation("Applicant")
+  reviews        Leave[]      @relation("Reviewer")
+  activities     Activity[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Session {
+  id         String   @id
+  staffId    Int
+  staff      Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  @@index([staffId])
+  @@index([expiresAt])
+}
+
+model LoginAttempt {
+  key       String   @id
+  count     Int      @default(0)
+  resetAt   DateTime
+}
+
+model Attendance {
+  id        Int    @id @default(autoincrement())
+  staffId   Int
+  staff     Staff  @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  date      String
+  checkIn   String @default("")
+  checkOut  String @default("")
+  status    String @default("Absent")
+  @@unique([staffId, date])
+  @@index([date])
+}
+
+model Leave {
+  id         Int       @id @default(autoincrement())
+  staffId    Int
+  staff      Staff     @relation("Applicant", fields: [staffId], references: [id], onDelete: Cascade)
+  start      String
+  end        String
+  type       String
+  reason     String
+  status     String    @default("Pending")
+  reviewerId Int?
+  reviewer   Staff?    @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewedAt DateTime?
+  createdAt  DateTime  @default(now())
+  @@index([staffId, status])
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  staffId   Int
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  name      String
+  text      String
+  kind      String
+  createdAt DateTime @default(now())
+  @@index([staffId, createdAt])
+}
+
+model Setting {
+  id          Int    @id @default(1)
+  institution String @default("University Staff Management")
+  email       String @default("hr@university.example")
+}

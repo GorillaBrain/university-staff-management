@@ -1,0 +1,54 @@
+name: Verify secure application
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: usms
+          POSTGRES_PASSWORD: disposable-ci-database
+          POSTGRES_DB: usms_secure
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U usms -d usms_secure"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://usms:disposable-ci-database@127.0.0.1:5433/usms_secure
+      APP_ORIGIN: http://127.0.0.1:3001
+      AUTH_COOKIE_SECURE: "false"
+      SEED_PASSWORD: Disposable-CI-Staff-2026!
+      SEED_DEMO_PASSWORD: Disposable-CI-Demo-2026!
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run db:deploy
+      - run: npm run db:seed
+      - run: npm test
+      - run: npm run build
+      - name: Verify production HTTP flows
+        run: |
+          npm run start -- --port 3001 > /tmp/usms-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3001/login > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run test:api
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install semgrep==1.185.0
+      - run: semgrep scan --config security-audit/semgrep.yml --metrics=off --error app lib
+      - run: semgrep scan --config security-audit/semgrep.yml --metrics=off lab/vulnerable-app/overrides

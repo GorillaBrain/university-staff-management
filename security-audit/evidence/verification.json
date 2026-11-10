@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-11-10T10:31:46.287Z",
+  "target": "http://127.0.0.1:3001",
+  "tool": "Node.js HTTP integration tests (not ZAP or Burp)",
+  "checks": [
+    {
+      "check": "Anonymous records require authentication",
+      "passed": true
+    },
+    {
+      "check": "Secure response headers and nonce CSP",
+      "passed": true
+    },
+    {
+      "check": "Database seed counts and safe response projection",
+      "passed": true
+    },
+    {
+      "check": "Own-record and department scope; IDOR blocked",
+      "passed": true
+    },
+    {
+      "check": "Profile mass assignment blocked",
+      "passed": true
+    },
+    {
+      "check": "Administrative CRUD protected from staff and heads",
+      "passed": true
+    },
+    {
+      "check": "Cross-origin mutation blocked",
+      "passed": true
+    },
+    {
+      "check": "Search treats SQL syntax as ordinary input",
+      "passed": true
+    },
+    {
+      "check": "Staff and department create/edit/head assignment",
+      "passed": true
+    },
+    {
+      "check": "Attendance check-in/check-out and duplicate rejection",
+      "passed": true
+    },
+    {
+      "check": "Leave submission, department approval, cross-department denial and review locking",
+      "passed": true
+    },
+    {
+      "check": "Managers cannot approve their own leave",
+      "passed": true
+    },
+    {
+      "check": "Profile updates and password change invalidate every session",
+      "passed": true
+    },
+    {
+      "check": "Deactivation immediately revokes sessions",
+      "passed": true
+    },
+    {
+      "check": "Server rejects expired sessions even with a replayed cookie",
+      "passed": true
+    },
+    {
+      "check": "Server enforces inactivity timeout",
+      "passed": true
+    },
+    {
+      "check": "Public demonstration account is read-only",
+      "passed": true
+    },
+    {
+      "check": "Logout revokes the server-side session",
+      "passed": true
+    },
+    {
+      "check": "Repeated invalid logins are throttled",
+      "passed": true
+    }
+  ]
+}
