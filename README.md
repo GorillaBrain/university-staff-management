@@ -2,6 +2,8 @@
 
 A university administration application built with Next.js, React, TypeScript, Tailwind CSS, PostgreSQL and Prisma. The UI follows the supplied dashboard, attendance and leave-management examples.
 
+**For the audit team:** [Step-by-step ZAP, Burp and Semgrep instructions](TEAM_SECURITY_AUDIT_INSTRUCTIONS.md).
+
 ## Two application targets
 
 - **Secure application:** the repository root. Database-backed login, server-enforced permissions and staff administration. This is the only Vercel deployment target.

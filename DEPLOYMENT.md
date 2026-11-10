@@ -5,7 +5,7 @@
 - Stack: Next.js, React, TypeScript, Tailwind CSS, Prisma and PostgreSQL; Node.js 24.
 - Managed secure database: separate Neon PostgreSQL resource in the Vercel Project team.
 
-The repository is private and Vercel's additional sign-in protection remains enabled. The app also requires its own staff login. Public source visibility and removal of Vercel's extra sign-in gate require the owner's explicit approval. Do not treat the deployment as anonymously accessible.
+The repository is public. Vercel's additional sign-in protection remains enabled, and the app also requires its own staff login. Public source access does not publish the vulnerable lab or remove the hosted sign-in gate. Do not treat the deployment as anonymously accessible.
 
 Hosted administrator and read-only demo credentials are on the developer's machine in `.local/cloud-accounts.txt`. The administrator password must remain private. The read-only demo account may be shared with authorized visitors. Credentials are not in Git.
 

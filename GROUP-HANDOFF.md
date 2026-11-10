@@ -1,5 +1,7 @@
 # Group project handoff
 
+**Start here:** [Step-by-step team security audit instructions](TEAM_SECURITY_AUDIT_INSTRUCTIONS.md).
+
 Development and assessment are separate group responsibilities. The ordinary application screens do not identify the intentional weaknesses.
 
 | Responsibility | Starting document | Required evidence |
